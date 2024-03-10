@@ -3,16 +3,28 @@
 import Button from "@/app/ui/button";
 import FormTextInput from "@/app/ui/form-text-input";
 import Link from "next/link";
-import { FormEvent } from "react";
+import { RegisterState, register } from "../action";
+import { UIStatus } from "@/app/lib/common/ui-state";
+import { useFormState, useFormStatus } from "react-dom";
+
+const initState: RegisterState = {
+  status: UIStatus.IDLE,
+  errorMessage: "",
+};
+
+function RegisterButton() {
+  const { pending } = useFormStatus();
+
+  return <Button text="Daftar" loading={pending} />;
+}
 
 export default function RegisterForm() {
-  function onHandleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-  }
+  const [formState, formAction] = useFormState(register, initState);
 
   return (
     <div className="flex flex-col bg-white p-5 rounded-lg drop-shadow-lg sm:w-[300px] w-full">
-      <form className="flex flex-col gap-4" onSubmit={onHandleSubmit}>
+      <form className="flex flex-col gap-4" action={formAction}>
+        <p>{formState.errorMessage}</p>
         <FormTextInput
           placeholder="Username"
           name="username"
@@ -36,7 +48,7 @@ export default function RegisterForm() {
           Pihak kami tidak akan membagikan informasi email anda ke pihak lain
           manapun
         </p>
-        <Button text="Daftar" />
+        <RegisterButton />
         <p className="text-sm text-center">
           Sudah punya akun? {<Link href="/login">Masuk!</Link>}
         </p>

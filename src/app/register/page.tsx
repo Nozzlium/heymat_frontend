@@ -1,6 +1,9 @@
+"use server";
+
+import { RegisterParam } from "../lib/requests/user-request";
 import RegisterForm from "./ui/register-form";
 
-export default function Page() {
+export default async function Page() {
   return (
     <main className="w-screen h-screen flex flex-row items-center justify-center">
       <div className="flex flex-col m-5 gap-2">
