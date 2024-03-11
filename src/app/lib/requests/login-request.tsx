@@ -1,23 +1,24 @@
 import axios from "axios";
+import { LOGIN } from "../url";
 
 export interface LoginParam {
   identity: string;
   password: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   code: number;
   status: string;
   data: {
-    message: string;
+    token: string;
   };
 }
 
 class LoginRequest {
   login: (param: LoginParam) => Promise<string> = async (param: LoginParam) => {
-    const response = await axios.post<LoginResponse>("api/login/proxy", param);
+    const response = await axios.post<LoginResponse>(LOGIN, param);
 
-    return response.data.data.message;
+    return response.data.data.token;
   };
 }
 

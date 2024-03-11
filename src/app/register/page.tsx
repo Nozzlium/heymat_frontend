@@ -1,7 +1,6 @@
 "use server";
 
-import { RegisterParam } from "../lib/requests/user-request";
-import RegisterForm from "./ui/register-form";
+import RegisterForm from "./register-form";
 
 export default async function Page() {
   return (

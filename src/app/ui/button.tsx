@@ -1,3 +1,5 @@
+import LoadingSpinner from "./loading-spinner";
+
 export default function Button({
   text,
   className,
@@ -15,7 +17,7 @@ export default function Button({
       onClick={onClick}
       disabled={loading}
     >
-      {!loading ? text ?? "" : "Diproses"}
+      {!loading ? text ?? "" : <LoadingSpinner />}
     </button>
   );
 }

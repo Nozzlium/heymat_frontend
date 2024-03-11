@@ -29,7 +29,7 @@ body {
 
 @layer base {
   a {
-    @apply text-red-600;
+    @apply text-blue-600;
     @apply font-bold;
   }
 }

@@ -1,33 +1,40 @@
 "use client";
 
-import loginRequest from "@/app/lib/requests/login-request";
 import Button from "@/app/ui/button";
 import FormTextInput from "@/app/ui/form-text-input";
 import Link from "next/link";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+import { UIStatus } from "@/app/lib/common/ui-state";
+import { LoginState, handleLogin } from "./action";
+import { ErrorAlert } from "../ui/alerts";
 
 export default function LoginForm() {
+  const [loginState, setLoginState] = useState<LoginState>({
+    status: UIStatus.IDLE,
+    message: "",
+  });
+
   function onHandleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoginState((prev) => {
+      const next = { ...prev };
+      next.status = UIStatus.LOADING;
+      return next;
+    });
     const formData = new FormData(e.currentTarget);
 
-    const username = formData.get("identity")?.toString() ?? "";
-    const password = formData.get("password")?.toString() ?? "";
     (async () => {
-      try {
-        const message = await loginRequest.login({
-          identity: username,
-          password: password,
-        });
-        console.log(message);
-      } catch (error) {
-        console.log(error);
-      }
+      const nextState = await handleLogin(formData);
+      setLoginState(nextState);
     })();
   }
 
   return (
-    <div className="flex flex-col bg-white p-5 rounded-lg drop-shadow-lg sm:w-[300px] w-full">
+    <div className="flex flex-col bg-white p-5 rounded-lg drop-shadow-lg gap-2 sm:w-[300px] w-full">
+      <ErrorAlert
+        message={loginState.message}
+        show={loginState.status === UIStatus.ERROR}
+      />
       <form className="flex flex-col gap-4" onSubmit={onHandleSubmit}>
         <FormTextInput
           placeholder="Username atau Email"
@@ -46,7 +53,7 @@ export default function LoginForm() {
             Lupa kata sandi
           </Link>
         </div>
-        <Button text="Masuk" />
+        <Button text="Masuk" loading={loginState.status === UIStatus.LOADING} />
         <p className="text-sm text-center">
           Belum punya akun? {<Link href="/register">Buat akun!</Link>}
         </p>

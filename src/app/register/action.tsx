@@ -2,10 +2,13 @@
 
 import userRequest from "../lib/requests/user-request";
 import { UIStatus } from "../lib/common/ui-state";
+import axios from "axios";
+import { HeymatError } from "../lib/errors";
+import { redirect } from "next/navigation";
 
 export interface RegisterState {
-  status: UIStatus.IDLE | UIStatus.SUCCESS | UIStatus.ERROR;
-  errorMessage: string;
+  status: UIStatus.IDLE | UIStatus.LOADING | UIStatus.SUCCESS | UIStatus.ERROR;
+  message: string;
 }
 
 export async function register(
@@ -19,11 +22,10 @@ export async function register(
   if (password !== confirmPassword) {
     return {
       status: UIStatus.ERROR,
-      errorMessage: "password tidak sesuai",
+      message: "password tidak sesuai",
     };
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const user = await userRequest.register({
       username: username,
@@ -31,16 +33,30 @@ export async function register(
       password: password,
     });
     if (user.id !== 0) {
-      return { status: UIStatus.SUCCESS, errorMessage: "" };
+      return {
+        status: UIStatus.SUCCESS,
+        message: `${user.username}, akunmu sudah berhasil dibuat. Kamu sudah bisa masuk ke dashboardmu.`,
+      };
     }
     return {
       status: UIStatus.ERROR,
-      errorMessage: "error",
+      message: "error",
     };
   } catch (error) {
+    let message = "error";
+    if (axios.isAxiosError(error)) {
+      const heymatErr = error.response?.data as HeymatError;
+      if (heymatErr) {
+        message = heymatErr.error.detail;
+      }
+    }
     return {
       status: UIStatus.ERROR,
-      errorMessage: "error",
+      message: message,
     };
   }
+}
+
+export async function goToLogin() {
+  redirect("/login");
 }

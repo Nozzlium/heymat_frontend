@@ -3,11 +3,15 @@ export default function FormTextInput({
   required,
   type,
   name,
+  disabled,
+  alert,
 }: {
   placeholder?: string;
   required?: boolean;
   type?: string;
   name?: string;
+  disabled?: boolean;
+  alert?: string;
 }) {
   return (
     <div>
@@ -17,7 +21,9 @@ export default function FormTextInput({
         required={required}
         type={type}
         name={name}
+        disabled={disabled}
       />
+      {alert ? <p className="">{alert}</p> : null}
     </div>
   );
 }
