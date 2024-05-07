@@ -1,6 +1,6 @@
 import axios from "axios";
-import User from "../data/user";
-import { REGISTER } from "../url";
+import { REGISTER } from "../lib/url";
+import User from "./user";
 
 export interface RegisterParam {
   username: string;
@@ -9,8 +9,6 @@ export interface RegisterParam {
 }
 
 interface RegisterResponse {
-  code: number;
-  status: string;
   data: User;
 }
 

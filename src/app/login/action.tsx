@@ -3,12 +3,15 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 import { UIStatus } from "../lib/common/ui-state";
-import { HeymatError } from "../lib/errors";
-import loginRequest from "../lib/requests/login-request";
+import loginRequest from "./login-request";
 
 export interface LoginState {
   status: UIStatus.IDLE | UIStatus.LOADING | UIStatus.SUCCESS | UIStatus.ERROR;
   message: string;
+}
+
+interface ErrorResponse {
+  data: string;
 }
 
 export async function handleLogin(formData: FormData): Promise<LoginState> {
@@ -31,9 +34,9 @@ export async function handleLogin(formData: FormData): Promise<LoginState> {
   } catch (error) {
     let message = "error";
     if (axios.isAxiosError(error)) {
-      const heymatErr = error.response?.data as HeymatError;
+      const heymatErr = error.response?.data as ErrorResponse;
       if (heymatErr) {
-        message = heymatErr.error.detail;
+        message = heymatErr.data;
       }
     }
     return {

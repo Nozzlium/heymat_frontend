@@ -1,14 +1,17 @@
 "use server";
 
-import userRequest from "../lib/requests/user-request";
 import { UIStatus } from "../lib/common/ui-state";
 import axios from "axios";
-import { HeymatError } from "../lib/errors";
 import { redirect } from "next/navigation";
+import userRequest from "./user-request";
 
 export interface RegisterState {
   status: UIStatus.IDLE | UIStatus.LOADING | UIStatus.SUCCESS | UIStatus.ERROR;
   message: string;
+}
+
+interface ErrorResponse {
+  data: string;
 }
 
 export async function register(
@@ -45,9 +48,9 @@ export async function register(
   } catch (error) {
     let message = "error";
     if (axios.isAxiosError(error)) {
-      const heymatErr = error.response?.data as HeymatError;
+      const heymatErr = error.response?.data as ErrorResponse;
       if (heymatErr) {
-        message = heymatErr.error.detail;
+        message = heymatErr.data;
       }
     }
     return {

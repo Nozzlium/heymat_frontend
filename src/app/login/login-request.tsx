@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN } from "../url";
+import { LOGIN } from "../lib/url";
 
 export interface LoginParam {
   identity: string;
@@ -7,8 +7,6 @@ export interface LoginParam {
 }
 
 export interface LoginResponse {
-  code: number;
-  status: string;
   data: {
     token: string;
   };
