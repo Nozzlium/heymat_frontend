@@ -1,0 +1,17 @@
+export default function FormTextArea({
+  placeholder,
+  required,
+  type,
+  name,
+  disabled,
+  alert,
+}: {
+  placeholder?: string;
+  required?: boolean;
+  type?: string;
+  name?: string;
+  disabled?: boolean;
+  alert?: string;
+}) {
+  return <div></div>;
+}
